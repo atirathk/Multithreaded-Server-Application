@@ -1,0 +1,5 @@
+# Makefile.dep created Wed May 15 15:26:35 PDT 2019
+protocol.o: protocol.cpp protocol.h sockets.h
+sockets.o: sockets.cpp sockets.h
+cix.o: cix.cpp protocol.h sockets.h logstream.h
+cixd.o: cixd.cpp protocol.h sockets.h logstream.h
