@@ -20,7 +20,18 @@ struct cix_header {
     cix_command command{ cix_command::ERROR };
     char filename[FILENAME_SIZE]{};
 };
+//cix_command::ERROR: return "ERROR";
+//cix_command::EXIT: return "EXIT";
+//void cix_command::GET();
 
+//cix_command::HELP: return "HELP";
+//cix_command::LS: return "LS";
+//cix_command::PUT: return "PUT";
+//cix_command::RM: return "RM";
+//cix_command::FILEOUT: return "FILEOUT";
+//cix_command::LSOUT: return "LSOUT";
+//cix_command::ACK;
+//cix_command::NAK;
 static_assert (sizeof(cix_header) == HEADER_SIZE, "running static_assert");
 
 void send_packet(base_socket& socket,

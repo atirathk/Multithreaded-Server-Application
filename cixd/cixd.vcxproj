@@ -34,59 +34,49 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="cix.cpp" />
-    <ClCompile Include="cixd.cpp" />
-    <ClCompile Include="protocol.cpp" />
-    <ClCompile Include="sockets.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="logstream.h" />
-    <ClInclude Include="protocol.h" />
-    <ClInclude Include="sockets.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Makefile" />
-    <None Include="Makefile.dep" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{073eab8b-303c-499c-8353-9aa15c89a266}</ProjectGuid>
+    <ProjectGuid>{2d1971cb-e70e-49aa-9e9b-7e72deb3e73b}</ProjectGuid>
     <Keyword>Linux</Keyword>
     <RootNamespace>ASG4</RootNamespace>
     <MinimumVisualStudioVersion>15.0</MinimumVisualStudioVersion>
     <ApplicationType>Linux</ApplicationType>
     <ApplicationTypeRevision>1.0</ApplicationTypeRevision>
     <TargetLinuxPlatform>Generic</TargetLinuxPlatform>
-    <LinuxProjectType>{D51BCBC9-82E9-4017-911E-C93873C4EA2B}</LinuxProjectType>
+    <LinuxProjectType>{FC1A4D80-50E9-41DA-9192-61C0DBAA00D2}</LinuxProjectType>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" Label="Configuration">
     <UseDebugLibraries>true</UseDebugLibraries>
+    <ConfigurationType>Makefile</ConfigurationType>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" Label="Configuration">
     <UseDebugLibraries>false</UseDebugLibraries>
+    <ConfigurationType>Makefile</ConfigurationType>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'" Label="Configuration">
     <UseDebugLibraries>true</UseDebugLibraries>
+    <ConfigurationType>Makefile</ConfigurationType>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'" Label="Configuration">
     <UseDebugLibraries>false</UseDebugLibraries>
+    <ConfigurationType>Makefile</ConfigurationType>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <UseDebugLibraries>true</UseDebugLibraries>
-    <UseOfStl>libstdc++_shared</UseOfStl>
-    <PlatformToolset>Remote_GCC_1_0</PlatformToolset>
-    <RemoteRootDir>~/CMPS109</RemoteRootDir>
     <ConfigurationType>Makefile</ConfigurationType>
+    <RemoteRootDir>~/CMPS109/ASG4</RemoteRootDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <UseDebugLibraries>false</UseDebugLibraries>
+    <ConfigurationType>Makefile</ConfigurationType>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'" Label="Configuration">
     <UseDebugLibraries>false</UseDebugLibraries>
+    <ConfigurationType>Makefile</ConfigurationType>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'" Label="Configuration">
     <UseDebugLibraries>true</UseDebugLibraries>
+    <ConfigurationType>Makefile</ConfigurationType>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings" />
@@ -94,32 +84,31 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <RemoteBuildCommandLine>make cix</RemoteBuildCommandLine>
+    <RemoteBuildCommandLine>make cixd</RemoteBuildCommandLine>
+    <RemoteReBuildCommandLine>make cixd</RemoteReBuildCommandLine>
     <RemoteCleanCommandLine>make clean</RemoteCleanCommandLine>
-    <RemoteReBuildCommandLine>make cix</RemoteReBuildCommandLine>
-    <RemoteBuildOutputs>./CMPS109/ASG4/cix</RemoteBuildOutputs>
     <PreBuildEventUseInBuild>false</PreBuildEventUseInBuild>
     <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
+    <RemoteBuildOutputs>CMPS109/ASG4</RemoteBuildOutputs>
   </PropertyGroup>
+  <ItemGroup>
+    <ClCompile Include="..\cix\cixd.cpp" />
+    <ClCompile Include="..\cix\protocol.cpp" />
+    <ClCompile Include="..\cix\sockets.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\cix\Makefile" />
+    <None Include="..\cix\Makefile.dep" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\cix\logstream.h" />
+    <ClInclude Include="..\cix\protocol.h" />
+    <ClInclude Include="..\cix\sockets.h" />
+  </ItemGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <ClCompile />
-    <CustomBuildStep />
-    <PreBuildEvent />
     <ClCompile>
-      <CppLanguageStandard>c++11</CppLanguageStandard>
+      <CppLanguageStandard>c++17</CppLanguageStandard>
     </ClCompile>
-    <PreBuildEvent>
-      <Command>
-      </Command>
-    </PreBuildEvent>
-    <RemotePreBuildEvent />
-    <RemotePostBuildEvent>
-      <Command>
-      </Command>
-    </RemotePostBuildEvent>
-    <RemotePreLinkEvent>
-      <Command>make</Command>
-    </RemotePreLinkEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

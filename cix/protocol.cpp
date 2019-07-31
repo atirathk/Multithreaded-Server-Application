@@ -23,7 +23,6 @@ string to_string(cix_command command) {
     };
 }
 
-
 void send_packet(base_socket& socket,
     const void* buffer, size_t bufsize) {
     const char* bufptr = static_cast<const char*> (buffer);

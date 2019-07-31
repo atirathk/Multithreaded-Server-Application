@@ -39,16 +39,24 @@ void cix_help() {
     cout << help;
 }
 
-void cix_get(client_socket& server) {
+void cix_get(client_socket& server, const char arg[FILENAME_SIZE]) {
     cix_header header;
     header.command = cix_command::GET;
+    strcpy(header.filename, arg);
     outlog << "sending header " << header << endl;
     send_packet(server, &header, sizeof header);
     recv_packet(server, &header, sizeof header);
     outlog << "received header " << header << endl;
-    if (header.command != cix_command::LSOUT) {
-        outlog << "sent GET, server did not return PUT" << endl;
+    if (header.command != cix_command::FILEOUT) {
+        outlog << "sent GET, server did not return FILEOUT" << endl;
         outlog << "server returned " << header << endl;
+    }
+    else {
+        char buffer[header.nbytes + 1];
+        recv_packet(server, buffer, header.nbytes);
+        outlog << "received " << header.nbytes << " bytes" << endl;
+        buffer[header.nbytes] = '\0';
+        cout << buffer;
     }
 }
 
@@ -96,11 +104,12 @@ int main(int argc, char** argv) {
         client_socket server(host, port);
         outlog << "connected to " << to_string(server) << endl;
         for (;;) {
-            string line;
-            getline(cin, line);
+            string command;
+            string arg;
+            cin >> command >> arg;
             if (cin.eof()) throw cix_exit();
-            outlog << "command " << line << endl;
-            const auto& itor = command_map.find(line);
+            outlog << "command " << command << endl;
+            const auto& itor = command_map.find(command);
             cix_command cmd = itor == command_map.end()
                 ? cix_command::ERROR : itor->second;
             switch (cmd) {
@@ -113,8 +122,11 @@ int main(int argc, char** argv) {
             case cix_command::LS:
                 cix_ls(server);
                 break;
+            case cix_command::GET:
+                cix_get(server, arg.c_str());
+                break;
             default:
-                outlog << line << ": invalid command" << endl;
+                outlog << command << ": invalid command" << endl;
                 break;
             }
         }

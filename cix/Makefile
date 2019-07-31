@@ -8,8 +8,8 @@ GMAKE       = ${MAKE} --no-print-directory
 
 GPPWARN     = -Wall -Wextra -Wpedantic -Wshadow -Wold-style-cast
 GPPOPTS     = ${GPPWARN} -fdiagnostics-color=never
-COMPILECPP  = g++ -std=gnu++11 -g -O0 ${GPPOPTS}
-MAKEDEPCPP  = g++ -std=gnu++11 -MM ${GPPOPTS}
+COMPILECPP  = g++ -std=c++11 -g -O0 ${GPPOPTS}
+MAKEDEPCPP  = g++ -std=c++11 -MM ${GPPOPTS}
 UTILBIN     = /afs/cats.ucsc.edu/courses/cmps109-wm/bin
 
 MODULES     = logstream protocol sockets
