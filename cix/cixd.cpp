@@ -49,45 +49,24 @@ void reply_ls(accepted_socket& client_sock, cix_header& header) {
 }
 
 void reply_get(accepted_socket& client_sock, cix_header& header) {
-    //string cmdBuilder = "cat ";
-    //cmdBuilder.append(header.filename);
-    //cmdBuilder.append(" 2>&1");
-    //const char* get_cmd = cmdBuilder.c_str();
-    //FILE* get_pipe = popen(get_cmd, "r");
-    //if (get_pipe == NULL) {
-    //    outlog << "get: popen failed: " << strerror(errno) << endl;
-    //    header.command = cix_command::NAK;
-    //    header.nbytes = errno;
-    //    send_packet(client_sock, &header, sizeof header);
-    //    return;
-    //}
-    //int status = pclose(get_pipe);
-    //if (status < 0) outlog << get_cmd <<
-    //    ": " << strerror(errno) << endl;
-    //else outlog << get_cmd << ": exit " << (status >> 8)
-    //    << " signal " << (status & 0x7F)
-    //    << " core " << (status >> 7 & 1) << endl;
     header.command = cix_command::FILEOUT;
-    header.nbytes = 0;
-    //memset(header.filename, 0, FILENAME_SIZE);
-    char* fileBuff;
-    ifstream fileData(header.filename, ios_base::in);
-    FILE* file = fopen(header.filename, "r");
-    if (file == NULL) {
+    ifstream fileData(header.filename, ios::binary);
+    //header.nbytes = fileData.tellg();
+    if (fileData.is_open() == false) {
         outlog << "get: fopen failed: " << strerror(errno) << endl;
         header.command = cix_command::NAK;
         header.nbytes = errno;
         send_packet(client_sock, &header, sizeof header);
         return;
     }
-    fileData.read(fileBuff, fileData.tellg());
-    string str(fileBuff);
-    outlog << str << '\n';
-    //header.nbytes = get_output.size();
+    char buff[0x100];
+    fileData.read(buff, sizeof buff);
+    header.nbytes = fileData.gcount();
     outlog << "sending header " << header << endl;
     send_packet(client_sock, &header, sizeof header);
-    send_packet(client_sock, fileBuff, strlen(fileBuff));
-    outlog << "sent " << strlen(fileBuff) << " bytes" << endl;
+    send_packet(client_sock, buff, header.nbytes);
+    outlog << "buff: " << buff << endl;
+    outlog << "sent " << header.nbytes << " bytes" << endl;
 }
 
 void run_server(accepted_socket& client_sock) {

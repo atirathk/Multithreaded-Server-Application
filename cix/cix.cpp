@@ -53,14 +53,13 @@ void cix_get(client_socket& server, const char arg[FILENAME_SIZE]) {
         outlog << "server returned " << header << endl;
     }
     else {
-        //Need to create a file or replace it
         char buffer[header.nbytes + 1];
         recv_packet(server, buffer, header.nbytes);
         outlog << "received " << header.nbytes << " bytes" << endl;
-        ofstream outfile(header.filename);
-        buffer[header.nbytes] = '\0';
-        outfile << buffer;
-        outfile.close();
+        ofstream outFile(header.filename);
+        buffer[header.nbytes + 1] = '\0';
+        outFile.write(buffer, header.nbytes);
+        outFile.close();
     }
 }
 
