@@ -89,7 +89,7 @@
     <RemoteCleanCommandLine>make clean</RemoteCleanCommandLine>
     <PreBuildEventUseInBuild>false</PreBuildEventUseInBuild>
     <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
-    <RemoteBuildOutputs>CMPS109/ASG4</RemoteBuildOutputs>
+    <RemoteBuildOutputs>/afs/cats.ucsc.edu/users/l/arkosire/CMPS109/ASG4/cixd/cixd</RemoteBuildOutputs>
   </PropertyGroup>
   <ItemGroup>
     <ClCompile Include="..\cix\cixd.cpp" />

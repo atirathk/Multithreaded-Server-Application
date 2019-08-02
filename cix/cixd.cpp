@@ -49,40 +49,45 @@ void reply_ls(accepted_socket& client_sock, cix_header& header) {
 }
 
 void reply_get(accepted_socket& client_sock, cix_header& header) {
-    const char* get_cmd = "get 2>&1";
-    FILE* get_pipe = popen(get_cmd, "r");
-    if (get_pipe == NULL) {
-        outlog << "get: popen failed: " << strerror(errno) << endl;
+    //string cmdBuilder = "cat ";
+    //cmdBuilder.append(header.filename);
+    //cmdBuilder.append(" 2>&1");
+    //const char* get_cmd = cmdBuilder.c_str();
+    //FILE* get_pipe = popen(get_cmd, "r");
+    //if (get_pipe == NULL) {
+    //    outlog << "get: popen failed: " << strerror(errno) << endl;
+    //    header.command = cix_command::NAK;
+    //    header.nbytes = errno;
+    //    send_packet(client_sock, &header, sizeof header);
+    //    return;
+    //}
+    //int status = pclose(get_pipe);
+    //if (status < 0) outlog << get_cmd <<
+    //    ": " << strerror(errno) << endl;
+    //else outlog << get_cmd << ": exit " << (status >> 8)
+    //    << " signal " << (status & 0x7F)
+    //    << " core " << (status >> 7 & 1) << endl;
+    header.command = cix_command::FILEOUT;
+    header.nbytes = 0;
+    //memset(header.filename, 0, FILENAME_SIZE);
+    char* fileBuff;
+    ifstream fileData(header.filename, ios_base::in);
+    FILE* file = fopen(header.filename, "r");
+    if (file == NULL) {
+        outlog << "get: fopen failed: " << strerror(errno) << endl;
         header.command = cix_command::NAK;
         header.nbytes = errno;
         send_packet(client_sock, &header, sizeof header);
         return;
     }
-    string get_output;
-    char buffer[0x1000];
-    for (;;) {
-        char* rc = fgets(buffer, sizeof buffer, get_pipe);
-        if (rc == nullptr) break;
-        get_output.append(buffer);
-    }
-    int status = pclose(get_pipe);
-    if (status < 0) outlog << get_cmd <<
-        ": " << strerror(errno) << endl;
-    else outlog << get_cmd << ": exit " << (status >> 8)
-        << " signal " << (status & 0x7F)
-        << " core " << (status >> 7 & 1) << endl;
-    header.command = cix_command::FILEOUT;
-    header.nbytes = get_output.size();
-    memset(header.filename, 0, FILENAME_SIZE);
-    char* fileBuff;
-    ifstream fileData(header.filename, ios_base::in);
-    FILE* file = fopen(header.filename, "r");
     fileData.read(fileBuff, fileData.tellg());
-    header.nbytes = get_output.size();
+    string str(fileBuff);
+    outlog << str << '\n';
+    //header.nbytes = get_output.size();
     outlog << "sending header " << header << endl;
     send_packet(client_sock, &header, sizeof header);
-    send_packet(client_sock, get_output.c_str(), get_output.size());
-    outlog << "sent " << get_output.size() << " bytes" << endl;
+    send_packet(client_sock, fileBuff, strlen(fileBuff));
+    outlog << "sent " << strlen(fileBuff) << " bytes" << endl;
 }
 
 void run_server(accepted_socket& client_sock) {

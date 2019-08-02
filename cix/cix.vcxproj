@@ -99,7 +99,7 @@
     <RemoteReBuildCommandLine>make cix</RemoteReBuildCommandLine>
     <PreBuildEventUseInBuild>false</PreBuildEventUseInBuild>
     <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
-    <RemoteBuildOutputs>CMPS109/ASG4</RemoteBuildOutputs>
+    <RemoteBuildOutputs>/afs/cats.ucsc.edu/users/l/arkosire/CMPS109/ASG4/cix/cix</RemoteBuildOutputs>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile />
