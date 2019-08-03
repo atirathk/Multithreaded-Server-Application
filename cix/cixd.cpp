@@ -65,7 +65,28 @@ void reply_get(accepted_socket& client_sock, cix_header& header) {
     outlog << "sending header " << header << endl;
     send_packet(client_sock, &header, sizeof header);
     send_packet(client_sock, buff, header.nbytes);
-    outlog << "buff: " << buff << endl;
+    outlog << "sent " << header.nbytes << " bytes" << endl;
+}
+
+void reply_put(accepted_socket& client_sock, cix_header& header) {
+    header.command = cix_command::ACK;
+    char buffer[header.nbytes + 1];
+    recv_packet(client_sock, buffer, header.nbytes);
+    outlog << "received " << header.nbytes << " bytes" << endl;
+    ofstream outFile(header.filename);
+    if (!outFile.is_open()) {
+        header.command = cix_command::NAK;
+        header.nbytes = errno;
+        send_packet(client_sock, &header, sizeof header);
+        return;
+    }
+    buffer[header.nbytes + 1] = '\0';
+    outFile.write(buffer, header.nbytes);
+    outFile.close();
+    header.command = cix_command::ACK;
+    outlog << "sending header " << header << endl;
+    send_packet(client_sock, &header, sizeof header);
+    send_packet(client_sock, buffer, header.nbytes);
     outlog << "sent " << header.nbytes << " bytes" << endl;
 }
 
@@ -83,6 +104,9 @@ void run_server(accepted_socket& client_sock) {
                 break;
             case cix_command::GET:
                 reply_get(client_sock, header);
+                break;
+            case cix_command::PUT:
+                reply_put(client_sock, header);
                 break;
             default:
                 outlog << "invalid client header:" << header << endl;

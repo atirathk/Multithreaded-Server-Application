@@ -9,6 +9,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <fstream>
+#include<stdio.h>
 using namespace std;
 
 #include "protocol.h"
@@ -62,7 +63,28 @@ void cix_get(client_socket& server, const char arg[FILENAME_SIZE]) {
         outFile.close();
     }
 }
-
+void cix_put(client_socket& server, const char arg[FILENAME_SIZE]) {
+    cix_header header;
+    header.command = cix_command::PUT;
+    ifstream fileData(arg, ios::binary);
+    strcpy(header.filename, arg);
+    char buff[0x100];
+    fileData.read(buff, sizeof buff);
+    header.nbytes = fileData.gcount();
+    outlog << "sending header " << header << endl;
+    send_packet(server, &header, sizeof header);
+    send_packet(server, buff, header.nbytes);
+    outlog << "sent " << header.nbytes << " bytes" << endl;
+    recv_packet(server, &header, sizeof header);
+    outlog << "received header " << header << endl;
+    if (header.command != cix_command::ACK) {
+        outlog << "sent PUT, server did not return ACK" << endl;
+        outlog << "server returned " << header << endl;
+    }
+    else {
+        outlog << "sent PUT, server returned ACK. Success!";
+    }
+}
 void cix_ls(client_socket& server) {
     cix_header header;
     header.command = cix_command::LS;
@@ -88,7 +110,6 @@ void cix_ls(client_socket& server) {
     }
 }
 
-
 void usage() {
     cerr << "Usage: " << outlog.execname() << " [host] [port]" << endl;
     throw cix_exit();
@@ -109,7 +130,16 @@ int main(int argc, char** argv) {
         for (;;) {
             string command;
             string arg;
-            cin >> command >> arg;
+            string input;
+            getline(cin, input);
+            auto pos = input.find(" ");
+            if (pos == input.npos) {
+                command = input;
+            }
+            else {
+                command = input.substr(0, pos);
+                arg = input.substr(++pos);
+            }
             if (cin.eof()) throw cix_exit();
             outlog << "command " << command << endl;
             const auto& itor = command_map.find(command);
@@ -127,6 +157,9 @@ int main(int argc, char** argv) {
                 break;
             case cix_command::GET:
                 cix_get(server, arg.c_str());
+                break;
+            case cix_command::PUT:
+                cix_put(server, arg.c_str());
                 break;
             default:
                 outlog << command << ": invalid command" << endl;
